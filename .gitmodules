@@ -5,5 +5,5 @@
 	path = flight-ticket
 	url = https://github.com/xlab-uiuc/flight-ticket
 [submodule "astronomy-shop"]
-	path = path
+	path = astronomy-shop
 	url = https://github.com/xlab-uiuc/opentelemetry-helm-charts
