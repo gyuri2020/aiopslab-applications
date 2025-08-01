@@ -4,3 +4,6 @@
 [submodule "flight-ticket"]
 	path = flight-ticket
 	url = https://github.com/xlab-uiuc/flight-ticket
+[submodule "FleetCast"]
+	path = FleetCast
+	url = https://github.com/lilygn/FleetCast
