@@ -7,3 +7,6 @@
 [submodule "astronomy-shop"]
 	path = astronomy-shop
 	url = https://github.com/xlab-uiuc/opentelemetry-helm-charts
+[submodule "FleetCast"]
+	path = FleetCast
+	url = https://github.com/lilygn/FleetCast
