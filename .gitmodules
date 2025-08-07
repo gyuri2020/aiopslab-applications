@@ -4,6 +4,9 @@
 [submodule "flight-ticket"]
 	path = flight-ticket
 	url = https://github.com/xlab-uiuc/flight-ticket
-[submodule "path"]
-	path = path
-	url = https://github.com/open-telemetry/opentelemetry-helm-charts
+[submodule "astronomy-shop"]
+	path = astronomy-shop
+	url = https://github.com/xlab-uiuc/opentelemetry-helm-charts
+[submodule "FleetCast"]
+	path = FleetCast
+	url = https://github.com/lilygn/FleetCast
