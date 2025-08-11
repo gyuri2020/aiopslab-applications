@@ -48,6 +48,7 @@ spec:
               name: init-script
             - mountPath: /scripts
               name: failure-script 
+          imagePullPolicy: IfNotPresent
       volumes:
         - name: rate
           persistentVolumeClaim:

@@ -39,6 +39,7 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: recommendation
+          imagePullPolicy: IfNotPresent
       hostname: recommendation-db
       restartPolicy: Always
       volumes:

@@ -39,6 +39,7 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: user
+          imagePullPolicy: IfNotPresent
       hostname: user-db
       restartPolicy: Always
       volumes:

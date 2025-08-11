@@ -35,4 +35,5 @@ spec:
           resources:
             limits:
               cpu: "2"
+          imagePullPolicy: IfNotPresent
       restartPolicy: Always
