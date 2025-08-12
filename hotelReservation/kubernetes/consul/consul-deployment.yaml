@@ -39,5 +39,6 @@ spec:
               cpu: 100m
             limits:
               cpu: 1000m
+          imagePullPolicy: IfNotPresent
       restartPolicy: Always
 status: {}

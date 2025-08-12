@@ -39,6 +39,7 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: reservation
+          imagePullPolicy: IfNotPresent
       hostname: reservation-db
       restartPolicy: Always
       volumes:

@@ -32,4 +32,5 @@ spec:
           ports:
             - containerPort: 9093
               protocol: TCP
+          imagePullPolicy: IfNotPresent
       restartPolicy: Always
