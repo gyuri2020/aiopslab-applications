@@ -39,6 +39,7 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: profile
+          imagePullPolicy: IfNotPresent
       hostname: profile-db
       restartPolicy: Always
       volumes:
