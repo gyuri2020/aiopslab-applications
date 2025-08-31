@@ -3,7 +3,7 @@ kind: Job
 metadata:
   name: bhotelwrk-wlgen-job
 spec:
-  backoffLimit: 0   # 出错不重试
+  backoffLimit: 0   
   template:
     metadata:
       labels:
@@ -21,4 +21,4 @@ spec:
         args:
           - |
             echo "🚀 Running wlgen_proc with FRONTEND_SERVICE_HTTP_DIAL_ADDR=$FRONTEND_SERVICE_HTTP_DIAL_ADDR and JAEGER_DIAL_ADDR=$JAEGER_DIAL_ADDR"
-            /app/wlgen_proc --outfile $OUTFILE --duration $DURATION --tput $TPUT --multiplier $MULTIPLIER
+            /app/wlgen_proc --outfile $OUTFILE --duration $DURATION --tput $TPUT --multiplier $MULTIPLIER --stabletime $STABLETIME --triggertime $TRIGGERTIME --reverttime $REVERTTIME

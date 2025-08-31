@@ -4,8 +4,11 @@ data:
   JAEGER_DIAL_ADDR: jaeger.blueprint-hotel-reservation:12348
   OUTFILE: stats.csv
   DURATION: 120s
-  TPUT: '1000'
+  TPUT: '3000'
   MULTIPLIER: '6'
+  STABLETIME: '60'
+  TRIGGERTIME: '30'
+  REVERTTIME: '30'
 
 kind: ConfigMap
 metadata:
