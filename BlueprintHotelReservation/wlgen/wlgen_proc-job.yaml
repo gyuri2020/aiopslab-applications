@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: bhotelwrk-wlgen-job
+  labels:
+    job: workload
 spec:
   backoffLimit: 0   
   template:
