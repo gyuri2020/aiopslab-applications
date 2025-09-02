@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: bhotelwrk-wlgen-job
+  labels:
+    job: workload
 spec:
   backoffLimit: 0   
   template:
@@ -13,7 +15,7 @@ spec:
       containers:
       - name: wlgen
         image: 777lefty/wlgen-proc:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
             name: bhotelwrk-wlgen-env
