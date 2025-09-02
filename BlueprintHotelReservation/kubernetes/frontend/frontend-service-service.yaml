@@ -3,7 +3,7 @@ kind: Service
 metadata:
   annotations:
     kompose.cmd: kompose -f docker-compose-no-rpc.yml -o k8s-no-rpc/ -n blueprint-hotel convert
-    kompose.image-pull-policy: Always
+    kompose.image-pull-policy: IfNotPresent
     kompose.version: 1.37.0 (fb0539e64)
   labels:
     io.kompose.service: frontend-service

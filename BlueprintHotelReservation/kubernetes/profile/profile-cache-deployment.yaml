@@ -4,7 +4,7 @@ metadata:
   annotations:
     kompose.cmd: kompose -f docker-compose-no-rpc.yml -o k8s-no-rpc/ -n blueprint-hotel
       convert
-    kompose.image-pull-policy: Always
+    kompose.image-pull-policy: IfNotPresent
     kompose.version: 1.37.0 (fb0539e64)
   labels:
     io.kompose.service: profile-cache
@@ -20,14 +20,14 @@ spec:
       annotations:
         kompose.cmd: kompose -f docker-compose-no-rpc.yml -o k8s-no-rpc/ -n blueprint-hotel
           convert
-        kompose.image-pull-policy: Always
+        kompose.image-pull-policy: IfNotPresent
         kompose.version: 1.37.0 (fb0539e64)
       labels:
         io.kompose.service: profile-cache
     spec:
       containers:
       - image: memcached
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: profile-cache-ctr
         ports:
         - containerPort: 11211

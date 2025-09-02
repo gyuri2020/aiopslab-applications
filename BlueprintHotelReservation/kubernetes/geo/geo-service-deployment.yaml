@@ -4,7 +4,7 @@ metadata:
   annotations:
     kompose.cmd: kompose -f docker-compose-no-rpc.yml -o k8s-no-rpc/ -n blueprint-hotel
       convert
-    kompose.image-pull-policy: Always
+    kompose.image-pull-policy: IfNotPresent
     kompose.version: 1.37.0 (fb0539e64)
   labels:
     configmap: rpc
@@ -21,7 +21,7 @@ spec:
       annotations:
         kompose.cmd: kompose -f docker-compose-no-rpc.yml -o k8s-no-rpc/ -n blueprint-hotel
           convert
-        kompose.image-pull-policy: Always
+        kompose.image-pull-policy: IfNotPresent
         kompose.version: 1.37.0 (fb0539e64)
       labels:
         io.kompose.service: geo-service
@@ -33,7 +33,7 @@ spec:
         - configMapRef:
             name: rpc
         image: 777lefty/docker-geo-service-container:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: geo-service-container
         ports:
         - containerPort: 12345
