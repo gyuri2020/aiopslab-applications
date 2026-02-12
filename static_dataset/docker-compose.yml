@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  static-data:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: static-dataset-${NAMESPACE:-static-data}
+    environment:
+      - NAMESPACE=${NAMESPACE:-static-data}
+    volumes:
+      # Raw dataset mounted under /root/ (only root can access /root/)
+      - ${DATASET_PATH:-.}:/root/raw:ro
+      # Processing configuration from host
+      - ${PROCESSING_CONFIG:-./default_config.json}:/root/config.json:ro
+      # Telemetry stays inside container at /data/telemetry/ (no host mount)
