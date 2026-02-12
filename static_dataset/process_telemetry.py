@@ -16,7 +16,10 @@ import json
 import sys
 import time
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# OpenRCA dataset timestamps are in UTC+8
+_UTC_PLUS_8 = timezone(timedelta(hours=8))
 
 import pandas as pd
 
@@ -139,7 +142,7 @@ def mode_init(config):
     print(f"  Time offset: {time_offset}s")
 
     if init_start is not None and init_end is not None:
-        print(f"  Original window: {datetime.fromtimestamp(init_start)} ~ {datetime.fromtimestamp(init_end)}")
+        print(f"  Original window: {datetime.fromtimestamp(init_start, tz=_UTC_PLUS_8)} ~ {datetime.fromtimestamp(init_end, tz=_UTC_PLUS_8)}")
     else:
         print("  No time window specified, loading all data")
 
@@ -217,8 +220,8 @@ def mode_stream(config):
         print("  No remaining data to stream.")
         return
 
-    print(f"  Starting cursor: {datetime.fromtimestamp(cursor)}")
-    print(f"  Data ends at: {datetime.fromtimestamp(max_ts)}")
+    print(f"  Starting cursor: {datetime.fromtimestamp(cursor, tz=_UTC_PLUS_8)}")
+    print(f"  Data ends at: {datetime.fromtimestamp(max_ts, tz=_UTC_PLUS_8)}")
 
     last_tick = time.time()
 
@@ -248,7 +251,7 @@ def mode_stream(config):
             json.dump({"stream_cursor": cursor}, f)
 
         if total_new > 0:
-            print(f"  +{total_new} rows (cursor: {datetime.fromtimestamp(cursor)})")
+            print(f"  +{total_new} rows (cursor: {datetime.fromtimestamp(cursor, tz=_UTC_PLUS_8)})")
 
     print("=== Stream complete: all data consumed ===")
 
