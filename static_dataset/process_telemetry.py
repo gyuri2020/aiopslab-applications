@@ -80,23 +80,26 @@ def read_csv_filtered(filepath, start_ts=None, end_ts=None):
         (DataFrame of matching rows, bool whether any rows existed)
     """
     chunks = []
-    has_timestamp = None
+    timestamp_col = None
     total_read = 0
 
     for chunk in pd.read_csv(filepath, chunksize=CHUNK_SIZE):
         total_read += len(chunk)
 
-        # Check on first chunk if timestamp column exists
-        if has_timestamp is None:
-            has_timestamp = "timestamp" in chunk.columns
+        # Detect timestamp column on first chunk
+        if timestamp_col is None:
+            timestamp_col = get_timestamp_col(chunk)
 
-        if not has_timestamp or start_ts is None or end_ts is None:
+        if not timestamp_col or start_ts is None or end_ts is None:
             # No filtering possible, collect all
             chunks.append(chunk)
             continue
 
+        # Normalize timestamps (convert milliseconds to seconds if needed)
+        chunk[timestamp_col] = chunk[timestamp_col].apply(_normalize_timestamp)
+
         # Filter to time window
-        mask = (chunk["timestamp"] >= start_ts) & (chunk["timestamp"] < end_ts)
+        mask = (chunk[timestamp_col] >= start_ts) & (chunk[timestamp_col] < end_ts)
         filtered = chunk[mask]
 
         if not filtered.empty:
@@ -104,7 +107,7 @@ def read_csv_filtered(filepath, start_ts=None, end_ts=None):
 
         # Early termination: if the minimum timestamp in this chunk is already
         # past the end of our window, all subsequent data is too late.
-        if chunk["timestamp"].min() >= end_ts:
+        if chunk[timestamp_col].min() >= end_ts:
             break
 
     if not chunks:
@@ -122,8 +125,11 @@ def write_rows(namespace, tel_type, filename, df, time_offset):
     out_dir.mkdir(parents=True, exist_ok=True)
 
     df = df.copy()
-    if time_offset and "timestamp" in df.columns:
-        df["timestamp"] = df["timestamp"] + time_offset
+    # Apply time offset to whichever timestamp column exists
+    if time_offset:
+        timestamp_col = get_timestamp_col(df)
+        if timestamp_col:
+            df[timestamp_col] = df[timestamp_col] + time_offset
 
     output_file = out_dir / f"{filename}.csv"
     write_header = not output_file.exists()
@@ -173,15 +179,52 @@ def mode_init(config):
     print(f"=== Init complete: {total_rows} rows ===")
 
 
+def get_timestamp_col(df):
+    """Detect which timestamp column exists in the DataFrame.
+
+    Args:
+        df: DataFrame or chunk to check
+
+    Returns:
+        Column name ("timestamp" or "startTime") or None if no timestamp column
+    """
+    if "timestamp" in df.columns:
+        return "timestamp"
+    elif "startTime" in df.columns:
+        return "startTime"
+    return None
+
+
+def _normalize_timestamp(ts):
+    """Convert milliseconds to seconds if needed."""
+    if pd.isna(ts):
+        return 0
+    # If timestamp > 1e12, it's likely in milliseconds
+    if ts > 1e12:
+        return ts / 1000.0
+    return ts
+
+
 def _get_max_timestamp(files):
     """Scan raw CSV files to find the maximum timestamp (lightweight)."""
     max_ts = 0
     for _, filepath in files:
         try:
-            for chunk in pd.read_csv(filepath, usecols=["timestamp"],
+            # Read first chunk to detect timestamp column
+            first_chunk = pd.read_csv(filepath, nrows=1)
+            timestamp_col = get_timestamp_col(first_chunk)
+
+            if not timestamp_col:
+                continue
+
+            # Scan all chunks for max timestamp
+            for chunk in pd.read_csv(filepath, usecols=[timestamp_col],
                                      chunksize=CHUNK_SIZE):
-                max_ts = max(max_ts, chunk["timestamp"].max())
-        except (ValueError, KeyError):
+                chunk_max = chunk[timestamp_col].max()
+                normalized = _normalize_timestamp(chunk_max)
+                if normalized > 0:
+                    max_ts = max(max_ts, normalized)
+        except (ValueError, KeyError, FileNotFoundError):
             pass
     return max_ts
 
